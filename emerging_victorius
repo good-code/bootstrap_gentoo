@@ -1,0 +1,59 @@
+source /etc/profile
+emerge --sync
+eselect profile list
+eselect profile set 8
+emerge --ask --update --deep --newuse @world
+
+
+#tools
+emerge -1 vim
+emerge -1 bc
+
+#sys libs
+emerge --nodeps sys-libs/ncurses dev-python/pytest
+emerge -1 =sys-libs/readline-7.0_p3 --nodeps 
+
+#perl
+perl-cleaner --allmodules
+emerge -1 dev-lang/perl --nodeps
+
+
+#python deps
+emerge -1 dev-python/flake8 dev-python/mccabe --nodeps
+emerge -1 dev-python/pbr  --nodeps 
+emerge -1 dev-python/mock --nodeps
+emerge -1 dev-python/configparser
+emerge dev-python/enum34 -1 --nodeps
+emerge -1 --nodeps dev-python/lit
+
+#config 
+cp 1st_emerge /etc/portage/package.use/1st_emerge
+
+
+#kernel
+cd /usr/src
+emerge -1 --nodeps dev-vcs/git
+git checkout https://github.com/torvalds/linux.git
+emerge -1 --nodeps dev-vcs/git
+git clone https://github.com/torvalds/linux.git
+tar -zxf root_bin.tar.gz /root/bin
+sh /root/bin/update_kernel
+
+
+#system deps
+USE='tcl -test' emerge --ask --update --deep --newuse system
+emerge -1 eix
+eix-update
+emerge -1 app-portage/gentoolkit
+equery d =dev-lang/perl-5.22.3 >> packages_to_upgrade
+emerge -1 bc
+source /etc/profile
+eselect profile list
+eselect profile set 8
+cp make.conf /etc/make.conf 
+emerge -1 vim
+rm $(cat ./docutils_collisions|xargs)
+cp 1st_emaege /etc/portage/package.use/1st_emerge
+emerge -1 eix
+eix-update
+emerge -1 app-portage/gentoolkit
